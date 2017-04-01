@@ -1,0 +1,24 @@
+{
+  "name": "cloud-analyser",
+  "dependencies": {},
+  "version": "0.1.0",
+  "description": "Cloud analayser for dride-cloud",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dride/dride-analyser.git"
+  },
+  "keywords": [
+    "dride"
+  ],
+  "author": "Dride, inc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dride/dride-analyser/issues"
+  },
+  "homepage": "https://github.com/dride/dride-analyser#readme"
+}
