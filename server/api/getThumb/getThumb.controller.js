@@ -22,7 +22,7 @@ exports.index = function(req, res) {
 
 
     var uid = (req.param('uid'))
-    var filename = (req.param('timestamp'))
+    var filename = (req.param('filename'))
     var bucketName = 'dride-2384f.appspot.com';
 
 
@@ -51,12 +51,9 @@ exports.index = function(req, res) {
             time: '00:00:01',
             //size: '640x480' // this optional if null will use the destination of the video 
         }, function(err, path) {
-            console.log(err)
-            console.log(path)
-
 
             if (err) {
-                console.log('--errr ' + err)
+                res.json({'error': err});
                 return err;
             }
 
@@ -77,7 +74,10 @@ exports.index = function(req, res) {
 
 		                console.log('Thumbnail uploaded to Storage at', path);
 		                res.json({'status': 1});
-		            });
+		            }).catch(error => {
+                        // Handle errors of asyncFunc1() and asyncFunc2()
+                        res.json({'error': error});
+                    });
 
 
             return path;
