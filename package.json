@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "server/app.js",
   "dependencies": {
+    "@google-cloud/storage": "^1.0.0",
     "body-parser": "~1.5.0",
     "composable-middleware": "^0.3.0",
     "compression": "~1.0.1",
@@ -15,7 +16,8 @@
     "jsonwebtoken": "^5.0.0",
     "method-override": "~1.0.0",
     "morgan": "~1.0.0",
-    "passport": "~0.2.0"
+    "passport": "~0.2.0",
+    "thumbler": "^1.1.1-1"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
