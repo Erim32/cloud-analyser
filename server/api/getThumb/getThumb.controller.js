@@ -23,17 +23,18 @@ exports.index = function(req, res) {
 
     var uid = (req.param('uid'))
     var filename = (req.param('filename'))
+    var timestamp = filename.split('.')[0]
     var bucketName = 'dride-2384f.appspot.com';
 
 
 
-    var filePath = 'clips/' + uid + '/' + filename + '.MP4'
+    var filePath = 'clips/' + uid + '/' + filename 
 
     //download video file
     const bucket = gcs.bucket(bucketName);
 
     return bucket.file(filePath).download({
-        destination: uid + '_' + filename + '.mp4'
+        destination: uid + '_' + filename 
     }, function(err) {
         if (err) {
         	res.json({'error': err});
@@ -46,8 +47,8 @@ exports.index = function(req, res) {
         //take a snapshot
         Thumbler({
             type: 'video',
-            input: uid + '_' + filename + '.mp4',
-            output: uid + '_' + filename + '.jpg',
+            input: uid + '_' + filename ,
+            output: uid + '_' + timestamp + '.jpg',
             time: '00:00:01',
             //size: '640x480' // this optional if null will use the destination of the video 
         }, function(err, path) {
@@ -58,15 +59,15 @@ exports.index = function(req, res) {
             }
 
 
-            return bucket.upload(uid + '_' + filename + '.jpg', {
-		                destination: 'thumbs/' + uid + '/' + filename + '.jpg'
+            return bucket.upload(uid + '_' + timestamp + '.jpg', {
+		                destination: 'thumbs/' + uid + '/' + timestamp + '.jpg'
 		            }).then(() => {
 		            	console.log('upload !')
 		                var db = admin.database();
-		                var ref = db.ref("clips").child(uid).child(filename).update({
+		                var ref = db.ref("clips").child(uid).child(timestamp).update({
 
 		                    thumbs: {
-		                        'src': 'https://storage.cloud.google.com/dride-2384f.appspot.com/thumbs/' + uid + '/' + filename + '.jpg'
+		                        'src': 'https://storage.cloud.google.com/dride-2384f.appspot.com/thumbs/' + uid + '/' + timestamp + '.jpg'
 		                    },
 		                    active: 1
 
