@@ -4,7 +4,10 @@
 
 var config = require('../../config/environment');
 var admin = require("firebase-admin");
-var gcs = require('@google-cloud/storage')();
+var gcs = require('@google-cloud/storage')({
+  projectId: 'dride-2384f.appspot.com',
+  keyFilename: config.firebase.serviceAccount
+});
 
 var Thumbler = require('thumbler');
 
@@ -15,6 +18,8 @@ var Thumbler = require('thumbler');
  */
 
 exports.index = function(req, res) {
+
+
 
     var uid = (req.param('uid'))
     var filename = (req.param('timestamp'))
@@ -31,6 +36,7 @@ exports.index = function(req, res) {
         destination: uid + '_' + filename + '.mp4'
     }, function(err) {
         if (err) {
+        	res.json({'error': err});
             return err.message
         }
 
