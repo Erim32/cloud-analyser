@@ -50,7 +50,7 @@ exports.index = function(req, res) {
             input: uid + '_' + filename ,
             output: uid + '_' + timestamp + '.jpg',
             time: '00:00:01',
-            //size: '640x480' // this optional if null will use the destination of the video 
+            size: '640x480' // this optional if null will use the destination of the video 
         }, function(err, path) {
 
             if (err) {
@@ -60,25 +60,42 @@ exports.index = function(req, res) {
 
 
             return bucket.upload(uid + '_' + timestamp + '.jpg', {
-		                destination: 'thumbs/' + uid + '/' + timestamp + '.jpg'
-		            }).then(() => {
-		            	console.log('upload !')
-		                var db = admin.database();
-		                var ref = db.ref("clips").child(uid).child(timestamp).update({
+                destination: 'thumbs/' + uid + '/' + timestamp + '.jpg'
+            }).then((data) => {
 
-		                    thumbs: {
-		                        'src': 'https://storage.cloud.google.com/dride-2384f.appspot.com/thumbs/' + uid + '/' + timestamp + '.jpg'
-		                    },
-		                    active: 1
+                console.log('upload completed!')
+                let file = data[0]
+                file.getSignedUrl({
+                    action: 'read',
+                    expires: '03-17-2025'
+                }, function(err, url) {
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
 
-		                })
+                    var db = admin.database();
+                    var ref = db.ref("clips").child(uid).child(timestamp).update({
 
-		                console.log('Thumbnail uploaded to Storage at', path);
-		                res.json({'status': 1});
-		            }).catch(error => {
-                        // Handle errors of asyncFunc1() and asyncFunc2()
-                        res.json({'error': error});
-                    });
+                        thumbs: {
+                            'src': url
+                        },
+                        active: 1
+
+                    })
+
+                    console.log('Thumbnail uploaded to Storage at', path);
+                    res.json({ 'status': 1 });
+
+
+                })
+
+
+
+            }).catch(error => {
+                // Handle errors of asyncFunc1() and asyncFunc2()
+                res.json({ 'error': error });
+            });
 
 
             return path;
